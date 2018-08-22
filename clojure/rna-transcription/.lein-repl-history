@@ -1,0 +1,29 @@
+(def protein-map {
+"
+" "G"
+"
+" "T"
+})
+(def protein-map { "G" "C" "C" "G" "U" "A" "A" "T" })
+(protein-map "A")
+(protein-map "G")
+(map #(protein-map %) "A")
+(map #(protein-map (str %)) "A")
+(map #(-> % str protein-map) "A")
+(map #(-> % str protein-map) "AGT")
+(def protein-map { \G "C" "C" "G" "U" "A" "A" "T" })
+(map #(-> % str protein-map) "G")
+(map #(-> % identity) "G")
+(protein-map \G)
+(map identity "G")
+(map protein-map "G")
+(def protein-map { \G "C" \C "G" \U  "A" \A "T" })
+(map protein-map "GCTA")
+(contains? nil '(\G nil))
+(contains? [\G nil \C])
+(contains? [\G nil \C] nil)
+exit
+(into "" [1 2])
+(into [] "abc")
+(into "" ["a"])
+exit

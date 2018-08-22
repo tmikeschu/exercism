@@ -1,0 +1,172 @@
+ar-array("mee")
+char-array("mee")
+str/split
+clojure.string/split "mee"
+clojure.string/split "mee" ""
+(clojure.string/split "mee" "")
+(clojure.string/split "mee" #"")
+clojure.string/split "mee" #""
+str (1)
+clojure.str 1
+str(1)
+(str 1)
+(clojure.string/split (str 11) #"")
+{ a: 1 }
+(.split "me" #"")
+(.split "me" "")
+.split "me" ""
+(chars "me")
+(char-array "me")
+exit
+(10 -> (str) (count))
+(require 'clojure.core/->)
+(require clojure.core/->)
+(require clojure.core)
+(require 'clojure.core)
+(10 -> (str) (count))
+(10 clojure.core/-> (str) (count))
+(10 'clojure.core/-> (str) (count))
+(10 'clojure.core/-> (str) (.count))
+(10 -> (str) (.count))
+(10 -> (str) (count))
+(10 'clojure.core/-> (str) (count))
+(count(str 10))
+exit
+(-> 10 str count)
+(-> 10 str split)
+(-> 10 str (split ""))
+(-> 10 str (.split ""))
+(-> 10 str (split ""))
+(-> 10 str (.split ""))
+(-> 10 str (.split #""))
+(-> 10 str (split #""))
+(-> 10 str (.split ""))
+(-> 10 (str) (.split ""))
+(-> 10 (str) (.split "") first)
+(-> 10 (str) (.split "") last)
+(-> 10 (str) (.split "") map(int))
+(-> 10 (str) (.split "")( map(int)))
+(-> 10 (str) (.split "") (map(#(int %))))
+(int "1")
+(num "1")
+(parseInt "1")
+(parse-int "1")
+(Integer/parseInt "1")
+(-> 10 (str) (.split "") (map(Integer/parseInt))))
+(-> 10 (str) (.split "") (map(Integer/parseInt)))
+(-> 10 (str) (.split "") (map(#(Integer/parseInt %))))
+(-> 10 (str) (.split "") map(#(Integer/parseInt %)))
+(use 'clojure.string)
+(-> 10 str (split #""))
+(-> 10 str (split #"") map(Integer/parseInt))
+(-> 10 str (split #"") map(#(Integer/parseInt %)))
+(read-string "1")
+(-> 10 str (split #"") map(#(read-string %)))
+(-> 10 str (split #"") map(read-string)))
+(-> 10 str (split #"") map(read-string))
+(-> 10 str (split #"") map(fn [x] read-string x))
+(-> 10 str (split #""))
+(let [x (-> 10 str (split #""))]
+x)
+(let [x (-> 10 str (split #""))]
+(map read-string x)
+)
+(-> 10 str (split #"") (map read-string)))
+(-> 10 str (split #"") (map read-string))
+(-> 10 str (split #"") (map #(read-string %)))
+(let [x (-> 10 str (split #""))]
+(map read-string x))
+(-> 10 str (split #"") (map read-string)))
+(-> 10 str (split #"") (map read-string))
+(-> 10 str (split #"") (map (read-string)))
+(-> 10 str (split #"") (map read-string))
+(let [x (-> 10 str (split #""))]
+(map #(read-string %)))
+(let [x (-> 10 str (split #""))]
+(map #(read-string %1)))
+(let [x (-> 10 str (split #""))]
+(first(map #(read-string %1))))
+(-> 10 str (split #"") (map (fn [x] read-string x)))
+(-> 10 str (split #"") (map #(+ "1")))
+(-> 10 str (split #"") (map #(Integer/parseInt %)))
+(-> 10 str (.split "") (map #(Integer/parseInt %)))
+(-> 10 str (.split "") (map #(Integer/parseInt %))))
+(let [x (-> 10 str (split #""))]
+(map #(Integer/parseInt %)))
+(let [x (-> 10 str (split #""))]
+(first(map #(Integer/parseInt %))))
+(let [x (-> 10 str (split #""))]
+(map #(Integer/parseInt %) x))
+(-> 10
+str
+(split #"")
+(fn [xs] map #(Integer/parseInt %) xs)
+)
+(-> 10
+str
+(split #"")
+(fn [xs] (map #(Integer/parseInt %)  xs)))
+(fn [xs] (map #(Integer/parseInt %)  xs))
+(fn [xs] (map #(Integer/parseInt %)  xs) ["1", "2"])
+((fn [xs] (map #(Integer/parseInt %)  xs)) ["1"])
+(-> 10
+str
+(split #"")
+(fn [xs] (map #(Integer/parseInt %) xs)))
+((fn [xs] (map #(Integer/parseInt %) xs) ["11"])
+)
+((fn [xs] (map #(Integer/parseInt %) xs)) ["11"])
+(-> 10
+str
+(split #"")
+(fn [xs] (map #(Integer/parseInt %) xs))
+)
+(seq (str 10))
+(map #(* % %)  (seq (str 10)))
+(map #(* (int %) (int %))  (seq (str 10)))
+(-> 101 str seq)
+(-> 101 str seq
+(map int))
+(map #(int %)))
+(-> 101 str seq
+(map #(int %)))
+(defn explode-to-digits [number] 
+))
+(defn explode-to-digits [number] 
+(seq (str number)))
+(-> 101 str seq (map explode-to-digits))
+(-> 101 str seq (map #(explode-to-digits %)))
+(-> 101 explode-to-digits)
+(-> 101 explode-to-digits type)
+(-> 101 explode-to-digits (map read-string))
+(-> 101 explode-to-digits map)
+(-> 101 str (split #"") (map #(Integer/parseInt %)))
+(--> 101 str (split #"") (map #(Integer/parseInt %)))
+(as-> 101 str (split #"") (map #(Integer/parseInt %)))
+(as-> 101 str (split "") (map #(Integer/parseInt %)))
+(as-> 101 str (split % #"") (map #(Integer/parseInt %)))
+(as-> 101 (str %) (split % #"") (map #(Integer/parseInt %)))
+(as-> 101 (str %) (split % #"") (map #(Integer/parseInt %1)))
+(-> 110 str (map (comp read-string str)))
+(--> 110 str (map (comp read-string str)))
+(->> 10 str (map (comp read-string str))))
+(->> 10 str (map (comp read-string str)))
+(-> 10 str (map (comp read-string str))))
+(-> 10 str (map (comp read-string str)))
+(--> 10 str (map (comp read-string str)))
+(->> 10 str (map (comp read-string str)))
+(->> 10 str (map (comp (+ 1) read-string str)))
+(->> 10 str (map (comp #(+ 1 %) read-string str)))
+expt
+(expt 10 2)
+(use 'clojure.math.numeric-tower')
+(use 'clojure.math.numeric-tower)
+(use 'clojure.math)
+(use 'math)
+(use 'math.numeric-tower)
+(** 2 2)
+(defn ** [x n] (reduce * (repeat n x)))
+(** 2 2)
+(->> 10 str (map (comp #(+ 1 %) read-string str)))
+t
+exit

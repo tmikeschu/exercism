@@ -1,0 +1,74 @@
+(tail "mex")
+(vector "mex")
+(const '() "me")
+(cons '() "me")
+(cons '() "m")
+(cons "m")
+(cons "m" '())
+(first "mex")
+(join "" '(\m \a))
+(strings.join "" '(\m \a))
+(clojure.string.join "" '(\m \a))
+(clojure.strings.join "" '(\m \a))
+('clojure.string.join "" '(\m \a))
+(apply str '(\m \a))
+exit
+(rest "mex")
+(apply str "mex")
+(apply str (rest "mex"))
+(map list "mex")
+(seq "mex")
+(seq)
+(seq nil)
+list
+(list)
+exit
+(seq "")
+(empty? nil)
+(apply str (list))
+exit
+(type (list))
+(type '(\a))
+(type 1)
+(type "me")
+(= String (type "me"))
+(= List (type '()))
+(= PersistentList (type '()))
+(= PersistantList (type '()))
+List
+tring
+String
+List
+clojure.List
+exit
+(load-file "src/reverse_string.clj")
+(time + 1 1_
+)
+(time + 1 1)
+(time (+ 1 1))
+(time (reverse-string "jlak;jdf;lasjdflkajsdldfjasld;fj
+"))
+(time ('reverse-string "jlak;jdf;lasjdflkajsdldfjasld;fj"))
+(time ('reverse-string-s "jlak;jdf;lasjdflkajsdldfjasld;fj"))
+(load-file "src/reverse_string.clj")
+(time ('reverse-string-s "jlak;jdf;lasjdflkajsdldfjasld;fj"))
+(time ('reverse-string "jlak;jdf;lasjdflkajsdldfjasld;fj"))
+(str)
+(first (str))
+t
+exit
+(load-file "src/reverse_string.clj")
+(time ('reverse-string "how about this one"))
+(time ('reverse-string-s "how about this one"))
+(time ('reverse-string "how about this one"))
+(time ('reverse-string-s "how about this one"))
+(time ('reverse-string "how about this one"))
+exit
+(conj "a" "b")
+(cons "a" "b")
+exit
+(vector 1 2 9)
+exit
+(into '() 5)
+(into '() [3])
+exit
