@@ -6,15 +6,14 @@ defmodule Words do
   """
   @spec count(String.t()) :: map
   def count(sentence) do
-    inc = &(&1 + 1)
-    reducer = fn el, acc -> Map.update(acc, el, 1, inc) end
-
     sentence
     |> String.downcase()
-    |> String.replace(~r/_/, " ")
-    |> String.replace(~r/[:;!@#$%^&().,]/, "")
-    |> String.replace(~r/\s\s+/, " ")
-    |> String.split(" ")
-    |> Enum.reduce(%{}, reducer)
+    |> String.split(~r/[^\w\d-]|_/u)
+    |> Enum.reject(&empty/1)
+    |> Enum.reduce(%{}, &count_reducer/2)
   end
+
+  def count_reducer(word, counts), do: Map.update(counts, word, 1, &(&1 + 1))
+  def empty(""), do: true
+  def empty(_), do: false
 end
