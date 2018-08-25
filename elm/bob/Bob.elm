@@ -5,22 +5,26 @@ import Regex exposing (contains, regex)
 import String exposing (endsWith, isEmpty, toUpper, trim)
 
 
-has_letters : String -> Bool
+type alias StringPred =
+    String -> Bool
+
+
+has_letters : StringPred
 has_letters =
     contains (regex "[a-zA-Z]")
 
 
-is_shouting : String -> Bool
+is_shouting : StringPred
 is_shouting s =
     (&&) (has_letters s) ((==) (toUpper s) s)
 
 
-is_question : String -> Bool
+is_question : StringPred
 is_question =
     endsWith "?"
 
 
-is_silent : String -> Bool
+is_silent : StringPred
 is_silent =
     trim >> isEmpty
 
