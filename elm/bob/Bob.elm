@@ -32,18 +32,21 @@ apply x f =
 
 hey : String -> String
 hey remark =
-    case [ is_shouting, is_question, is_silent ] |> map (apply remark) of
-        [ True, True, False ] ->
-            "Calm down, I know what I'm doing!"
+    let
+        fact xs =
+            xs |> map (apply remark) |> all identity
+    in
+    if fact [ is_shouting, is_question ] then
+        "Calm down, I know what I'm doing!"
 
-        [ True, False, False ] ->
-            "Whoa, chill out!"
+    else if fact [ is_shouting ] then
+        "Whoa, chill out!"
 
-        [ False, True, False ] ->
-            "Sure."
+    else if fact [ is_question ] then
+        "Sure."
 
-        [ False, False, True ] ->
-            "Fine. Be that way!"
+    else if fact [ is_silent ] then
+        "Fine. Be that way!"
 
-        _ ->
-            "Whatever."
+    else
+        "Whatever."
