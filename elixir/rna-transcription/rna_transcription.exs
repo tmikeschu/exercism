@@ -12,6 +12,5 @@ defmodule RNATranscription do
   def to_rna('C'), do: 'G'
   def to_rna('T'), do: 'A'
   def to_rna('A'), do: 'U'
-  def to_rna(x) when is_integer(x), do: to_rna([x])
-  def to_rna([h | t]), do: to_rna(h) ++ to_rna(t)
+  def to_rna([h | t]), do: (<<h>> |> to_charlist |> to_rna) ++ to_rna(t)
 end
