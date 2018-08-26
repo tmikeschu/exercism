@@ -20,19 +20,20 @@ defmodule Roman do
   """
   @spec numerals(pos_integer) :: String.t()
 
-  def numerals(x) do
-    numerals("", x)
+  def numerals(input) do
+    numerals("", input)
   end
 
   @spec numerals(String.t(), pos_integer) :: String.t()
-  def numerals(y, 0), do: y
+  def numerals(accumulator, 0), do: accumulator
 
-  def numerals(y, x) do
+  def numerals(accumulator, input) do
     @arabic_roman
-    |> Enum.find(fn {a, _} -> x >= a end)
-    |> reducer(y, x)
+    |> Enum.find(fn {arabic, _roman} -> input >= arabic end)
+    |> reducer(accumulator, input)
   end
 
   @spec reducer({pos_integer, String.t()}, String.t(), pos_integer) :: String.t()
-  defp reducer({a, r}, y, x), do: numerals(y <> r, x - a)
+  defp reducer({arabic, roman}, accumulator, input),
+    do: numerals(accumulator <> roman, input - arabic)
 end
