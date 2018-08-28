@@ -4,9 +4,13 @@ defmodule BeerSong do
   """
   @spec verse(integer) :: String.t()
   def verse(number) do
-    [&on_the_wall/1, &of_beer/1, &pass_it_around/1, &next_on_the_wall/1]
-    |> Enum.map(& &1.(number))
-    |> Enum.join("")
+    lyric_generators = [
+      &on_the_wall/1,
+      &of_beer/1,
+      &pass_it_around/1,
+      &next_on_the_wall/1
+    ]
+    Enum.reduce(lyric_generators, "", & &2 <> &1.(number))
   end
 
   @doc """
