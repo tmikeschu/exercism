@@ -21,11 +21,16 @@ defmodule BeerSong do
   end
 
   @spec on_the_wall(number) :: String.t()
-  def on_the_wall(number),
-    do: "#{number |> get_bottles |> String.capitalize()} of beer on the wall, "
+  def on_the_wall(number) do 
+    bottles = number
+              |> get_bottles
+              |> String.capitalize
+
+    "#{bottles} of beer on the wall, "
+  end
 
   @spec of_beer(number) :: String.t()
-  def of_beer(number), do: "#{number |> get_bottles} of beer.\n"
+  def of_beer(number), do: "#{get_bottles(number)} of beer.\n"
 
   @spec pass_it_around(non_neg_integer) :: String.t()
   defp pass_it_around(0), do: "Go to the store and buy some more"
@@ -33,13 +38,8 @@ defmodule BeerSong do
   defp pass_it_around(_), do: "Take one down and pass it around"
 
   @spec next_on_the_wall(number) :: String.t()
-  def next_on_the_wall(number) do
-    bottles = number |> dec |> get_bottles
-    ", #{bottles} of beer on the wall.\n"
-  end
-
-  @spec dec(number) :: number
-  def dec(x), do: x - 1
+  def next_on_the_wall(number),
+  do: ", #{get_bottles(number - 1)} of beer on the wall.\n"
 
   @spec pluralize(String.t(), non_neg_integer) :: String.t()
   def pluralize(str, 1), do: "1 #{str}"
