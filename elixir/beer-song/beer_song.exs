@@ -1,21 +1,12 @@
 defmodule BeerSong do
-  @on_the_wall """
-  CURRENT of beer on the wall, CURRENT of beer.
-  """
-  @next_on_the_wall ", NEXT of beer on the wall.\n"
-
   @doc """
   Get a single verse of the beer song
   """
   @spec verse(integer) :: String.t()
   def verse(number) do
-    @on_the_wall
-    |> String.replace("CURRENT", bottles(number))  
-    |> String.capitalize
-    |> Kernel.<>(pass_it(number))
-    |> String.replace("IT", take(number))  
-    |> Kernel.<>(@next_on_the_wall)
-    |> String.replace("NEXT", bottles(number - 1))  
+    [&on_the_wall/1, &of_beer/1, &pass_it_around/1, &next_on_the_wall/1]
+    |> Enum.map(& &1.(number))
+    |> Enum.join("")
   end
 
   @doc """
@@ -29,20 +20,33 @@ defmodule BeerSong do
     |> Enum.join("\n")
   end
 
+  @spec on_the_wall(number) :: String.t()
+  def on_the_wall(number),
+    do: "#{number |> get_bottles |> String.capitalize()} of beer on the wall, "
+
+  @spec of_beer(number) :: String.t()
+  def of_beer(number), do: "#{number |> get_bottles} of beer.\n"
+
+  @spec pass_it_around(non_neg_integer) :: String.t()
+  defp pass_it_around(0), do: "Go to the store and buy some more"
+  defp pass_it_around(1), do: "Take it down and pass it around"
+  defp pass_it_around(_), do: "Take one down and pass it around"
+
+  @spec next_on_the_wall(number) :: String.t()
+  def next_on_the_wall(number) do
+    bottles = number |> dec |> get_bottles
+    ", #{bottles} of beer on the wall.\n"
+  end
+
+  @spec dec(number) :: number
+  def dec(x), do: x - 1
+
   @spec pluralize(String.t(), non_neg_integer) :: String.t()
   def pluralize(str, 1), do: "1 #{str}"
   def pluralize(str, count), do: "#{count} #{str}s"
 
-  @spec bottles(non_neg_integer) :: String.t()
-  defp bottles(-1), do: bottles(99)
-  defp bottles(0), do: "no more bottles"
-  defp bottles(number), do: pluralize("bottle", number)
-
-  @spec take(non_neg_integer) :: String.t()
-  defp take(1), do: "it"
-  defp take(_), do: "one"
-
-  @spec pass_it(non_neg_integer) :: String.t()
-  defp pass_it(0), do: "Go to the store and buy some more"
-  defp pass_it(_), do: "Take IT down and pass it around"
+  @spec get_bottles(non_neg_integer) :: String.t()
+  defp get_bottles(-1), do: get_bottles(99)
+  defp get_bottles(0), do: "no more bottles"
+  defp get_bottles(number), do: pluralize("bottle", number)
 end
