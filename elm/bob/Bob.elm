@@ -9,47 +9,42 @@ type alias StringPred =
     String -> Bool
 
 
-has_letters : StringPred
-has_letters =
+hasLetters : StringPred
+hasLetters =
     contains (regex "[a-zA-Z]")
 
 
-is_shouting : StringPred
-is_shouting s =
-    (&&) (has_letters s) ((==) (toUpper s) s)
+isShouting : StringPred
+isShouting s =
+    hasLetters s && (toUpper s == s)
 
 
-is_question : StringPred
-is_question =
+isQuestion : StringPred
+isQuestion =
     endsWith "?"
 
 
-is_silent : StringPred
-is_silent =
+isSilent : StringPred
+isSilent =
     trim >> isEmpty
-
-
-apply : a -> (a -> b) -> b
-apply x f =
-    f x
 
 
 hey : String -> String
 hey remark =
     let
-        fact xs =
-            xs |> map (apply remark) |> all identity
+        fact =
+            all ((|>) remark)
     in
-    if fact [ is_shouting, is_question ] then
+    if fact [ isShouting, isQuestion ] then
         "Calm down, I know what I'm doing!"
 
-    else if fact [ is_shouting ] then
+    else if fact [ isShouting ] then
         "Whoa, chill out!"
 
-    else if fact [ is_question ] then
+    else if fact [ isQuestion ] then
         "Sure."
 
-    else if fact [ is_silent ] then
+    else if fact [ isSilent ] then
         "Fine. Be that way!"
 
     else
