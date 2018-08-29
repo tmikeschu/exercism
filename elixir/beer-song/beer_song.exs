@@ -4,13 +4,16 @@ defmodule BeerSong do
   """
   @spec verse(integer) :: String.t()
   def verse(number) do
-    lyric_generators = [
-      &on_the_wall/1,
-      &of_beer/1,
-      &pass_it_around/1,
-      &next_on_the_wall/1
-    ]
-    Enum.reduce(lyric_generators, "", & &2 <> &1.(number))
+    Enum.reduce(
+      [
+        &on_the_wall/1,
+        &of_beer/1,
+        &pass_it_around/1,
+        &next_on_the_wall/1
+      ],
+      "",
+      &(&2 <> &1.(number))
+    )
   end
 
   @doc """
@@ -25,10 +28,11 @@ defmodule BeerSong do
   end
 
   @spec on_the_wall(number) :: String.t()
-  def on_the_wall(number) do 
-    bottles = number
-              |> get_bottles
-              |> String.capitalize
+  def on_the_wall(number) do
+    bottles =
+      number
+      |> get_bottles
+      |> String.capitalize()
 
     "#{bottles} of beer on the wall, "
   end
@@ -42,8 +46,7 @@ defmodule BeerSong do
   defp pass_it_around(_), do: "Take one down and pass it around"
 
   @spec next_on_the_wall(number) :: String.t()
-  def next_on_the_wall(number),
-  do: ", #{get_bottles(number - 1)} of beer on the wall.\n"
+  def next_on_the_wall(number), do: ", #{get_bottles(number - 1)} of beer on the wall.\n"
 
   @spec pluralize(String.t(), non_neg_integer) :: String.t()
   def pluralize(str, 1), do: "1 #{str}"
