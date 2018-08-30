@@ -1,42 +1,28 @@
 defmodule ListOps do
-  # Please don't use any external modules (especially List) in your
-  # implementation. The point of this exercise is to create these basic functions
-  # yourself.
-  #
-  # Note that `++` is a function from an external module (Kernel, which is
-  # automatically imported) and so shouldn't be used either.
-
   @spec count(list) :: non_neg_integer
-  def count([]), do: 0
-  def count([_ | t]), do: 1 + count(t)
+  def count(l), do: reduce(l, 0, fn _, acc -> acc + 1 end)
 
   @spec reverse(list) :: list
-  def reverse([]), do: []
-  def reverse([h | t]), do: reverse(t, [h])
-  def reverse([h], r), do: [h | r]
-  def reverse([h | t], r), do: reverse(t, [h | r])
+  def reverse(l), do: reduce(l, [], &[&1 | &2])
 
   @spec map(list, (any -> any)) :: list
-  def map([], f), do: []
-  def map([h | t], f), do: [f.(h) | map(t, f)]
+  def map(l, f), do: reduce(l, [], &[f.(&1) | &2]) |> reverse
 
   @spec filter(list, (any -> as_boolean(term))) :: list
-  def filter([], f), do: []
-  def filter([h | t], f), do: if(f.(h), do: [h | filter(t, f)], else: filter(t, f))
+  def filter(l, f), do: reduce(l, [], filter_predicate(f)) |> reverse
+  defp filter_predicate(f), do: &if(f.(&1), do: [&1 | &2], else: &2)
 
   @type acc :: any
   @spec reduce(list, acc, (any, acc -> acc)) :: acc
-  def reduce([], acc, f), do: acc
+  def reduce([], acc, _f), do: acc
   def reduce([h | t], acc, f), do: reduce(t, f.(h, acc), f)
 
   @spec append(list, list) :: list
-  def append([], []), do: []
-  def append([], x), do: x
-  def append(x, []), do: x
-  def append([xh | xt], y), do: [xh | append(xt, y)]
+  def append(x, y), do: reduce(reverse(x), y, &[&1 | &2])
 
   @spec concat([[any]]) :: [any]
-  def concat([]), do: []
-  def concat([[] | t]), do: concat(t)
-  def concat([[h | ht] | t]), do: [h | concat([ht | t])]
+  def concat(l), do: concat(l, [])
+  defp concat([], acc), do: acc |> reverse
+  defp concat([[] | t], acc), do: concat(t, acc)
+  defp concat([[h | ht] | t], acc), do: concat([ht | t], [h | acc])
 end
