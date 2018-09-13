@@ -6,7 +6,7 @@ type alias Day =
 
 
 type alias DayInfo =
-    { order : String, quantity : String, gift : String, after : Maybe String }
+    { which : String, quantity : String, gift : String, after : Maybe String }
 
 
 days : List DayInfo
@@ -52,8 +52,8 @@ makeVerse day =
 partOne : Maybe Day -> String
 partOne =
     Maybe.map
-        (\( _, { order } ) ->
-            "On the " ++ order ++ " day of Christmas my true love gave to me, "
+        (\( _, { which } ) ->
+            "On the " ++ which ++ " day of Christmas my true love gave to me, "
         )
         >> Maybe.withDefault ""
 
