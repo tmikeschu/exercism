@@ -1,14 +1,22 @@
 (ns run-length-encoding)
-(alias 'S 'clojure.string)
 
-(defn strip-1
+(def re-char "(?i)[a-z ]")
+(def re-int "\\d+")
+
+(def coll-to-str (partial reduce str))
+
+(defn- strip-1
   "removes preceding 1s from a string"
   [s]
-  (S/replace s #"^1[^\d]" (subs s 1)))
+  (clojure.string/replace s #"^1[^\d]" (subs s 1)))
 
-(defn append-to-last
+(defn- append-to-last
   [el coll]
   (conj (pop coll) (conj (peek coll) el)))
+
+(defn- get-quantity [s] (Integer. (or (re-find (re-pattern re-int) s) 1)))
+
+(defn- get-letter [s] (re-find (re-pattern re-char) s))
 
 (defn run-length-encode
   "encodes a string with run-length-encoding"
@@ -20,21 +28,17 @@
             (conj %1 (vector %2)))
          (vector (vector)))
        (filter (comp not empty?))
-       (map (comp strip-1 S/join (juxt count peek)))
-       S/join))
+       (map (comp strip-1 coll-to-str (juxt count peek)))
+       coll-to-str))
 
-
-(defn get-quantity [s] (Integer. (or (re-find #"\d+" s) "1")))
-(defn get-letter [s] (re-find #"(?i)[a-z ]" s))
 
 (defn run-length-decode
   "decodes a run-length-encoded string"
   [cipher-text]
   (->> cipher-text
-       (re-seq #"(?i)\d+[a-z ]|[a-z ]")
+       (re-seq (re-pattern (str re-int re-char "|" re-char)))
        (map (comp
-              S/join 
+              coll-to-str
               (partial apply repeat)
               (juxt get-quantity get-letter)))
-       S/join
-    ))
+       coll-to-str))
