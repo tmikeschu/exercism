@@ -124,3 +124,73 @@ exit
 (repeat nil "a")
 (repeat 1 "a")
 exit
+(cons [1] [2])
+(cons '(1) '(2))
+(cons 1 (2))
+(cons 1 '(2))
+exit
+(ffirst [[1]]])
+(ffirst [[1]]]
+(ffirst [[1]])
+(conj [1] 1)
+(conj [1] 1
+)
+(conj [1] 2)
+(first [1])
+(rest [1,2,3])
+(pop [1 2 3])
+(peek [1 2 3])
+(lfirst [[1], [2]])
+(peek (peek [[1], [2]])
+)
+([])
+('[])
+'[]
+(vector vector)
+(vector '[])
+(conj 1 [2])
+(conj [2] 1)
+exit
+(peek (peek 
+'[]))
+t
+exit
+(vector)
+t
+exit
+((juxt peek count) '[1 1])
+(map (juxt peek count) [["A" "A"] ["
+])
+(map (juxt peek count) '['["A" "A"] '["B"]])
+(map (juxt peek count) '['["a" "A"] '["B"]])
+(map (juxt peek count) '['["a" "A] '["B"]])
+(map (juxt peek count) '['["a" "a"] '["B"]])
+(map (juxt peek count) '['["a", "a"] '["B"]])
+(map (juxt peek count) '['[\A \A] '["B"]])
+(map (juxt count peek) '['[\A \A] '["B"]])
+(map join (map (juxt count peek) '['[\A \A] '["B"]])
+)
+(map clojure.string/join (map (juxt count peek) '['[\A \A] '["B"]])
+)
+exit
+(re-find #"^1\w" "1A")
+(re-find #"^1\w" "11A")
+(re-find #"^1[\w]" "11A")
+(re-find #"^1[^\d]" "1A")
+(re-find #"^1[^\d]" "11A")
+(re-find #"^1[\w]" "11A")
+(re-find #"^1[^\d]" "11A")
+(rest "asdf")
+(subs "asdf" 1 3)
+(subs "asdf" 1 -1)
+(subs "asdf" 1 (count "asdf"))
+exit
+(first "ab")
+(rest "abc")
+(subs "a" 0 1)
+t
+exit
+(vector (vector (subs "abc" 0 1)))
+(peek (peek (vector (vector (subs "abc" 0 1)))
+))
+exit

@@ -1,35 +1,40 @@
 (ns run-length-encoding)
+(alias 'S 'clojure.string)
 
-(def char-reducer #(if (= (ffirst %1) %2)
-                     (apply conj ((juxt pop (comp (partial cons %2) peek)) %1))
-                     (conj %1 (list %2))))
+(defn strip-1
+  "removes preceding 1s from a string"
+  [s]
+  (S/replace s #"^1[^\d]" (subs s 1)))
+
+(defn append-to-last
+  [el coll]
+  (conj (pop coll) (conj (peek coll) el)))
 
 (defn run-length-encode
   "encodes a string with run-length-encoding"
   [plain-text]
   (->> plain-text
-       (reduce char-reducer '())
-       (map (juxt count (comp str first)))
-       (map (partial filter #(not= 1 %)))
-       (map (partial reduce str ""))
-       (reverse)
-       (reduce str ""))
-  )
+       (reduce
+         #(if (= (peek (peek %1)) %2)
+            (append-to-last %2 %1)
+            (conj %1 (vector %2)))
+         (vector (vector)))
+       (filter (comp not empty?))
+       (map (comp strip-1 S/join (juxt count peek)))
+       S/join))
 
-(defn- isDigit [c] (->> c str (re-find #"^\d")))
 
-(defn prepend-string [c] #(str c %))
-(def cipher-reducer #(if (isDigit %2)
-                       (apply conj ((juxt pop (comp (prepend-string %2) peek)) %1))
-                       (apply conj ((juxt pop 
-                                          (comp (() %2) (partial repeat) read-string peek)
-                                          ) %1))
-                              
-                       ))
+(defn get-quantity [s] (Integer. (or (re-find #"\d+" s) "1")))
+(defn get-letter [s] (re-find #"(?i)[a-z ]" s))
+
 (defn run-length-decode
   "decodes a run-length-encoded string"
   [cipher-text]
   (->> cipher-text
-       (reduce cipher-reducer '())
-       (reduce str "")
-  ))
+       (re-seq #"(?i)\d+[a-z ]|[a-z ]")
+       (map (comp
+              S/join 
+              (partial apply repeat)
+              (juxt get-quantity get-letter)))
+       S/join
+    ))
