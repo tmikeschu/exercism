@@ -1,0 +1,17 @@
+B /Users/tmikeschutte/.opam/default/lib/base
+B /Users/tmikeschutte/.opam/default/lib/base/caml
+B /Users/tmikeschutte/.opam/default/lib/base/shadow_stdlib
+B /Users/tmikeschutte/.opam/default/lib/bytes
+B /Users/tmikeschutte/.opam/default/lib/oUnit
+B /Users/tmikeschutte/.opam/default/lib/ocaml
+B /Users/tmikeschutte/.opam/default/lib/sexplib0
+B _build/default/.test.eobjs
+S /Users/tmikeschutte/.opam/default/lib/base
+S /Users/tmikeschutte/.opam/default/lib/base/caml
+S /Users/tmikeschutte/.opam/default/lib/base/shadow_stdlib
+S /Users/tmikeschutte/.opam/default/lib/bytes
+S /Users/tmikeschutte/.opam/default/lib/oUnit
+S /Users/tmikeschutte/.opam/default/lib/ocaml
+S /Users/tmikeschutte/.opam/default/lib/sexplib0
+S .
+FLG -w @a-4-29-40-41-42-44-45-48-58-59-60-40 -strict-sequence -strict-formats -short-paths -keep-locs
