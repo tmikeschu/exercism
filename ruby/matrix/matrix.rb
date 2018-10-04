@@ -10,20 +10,12 @@ class Matrix
   end
 
   def columns
-    first_row.zip(*tail_rows)
+    rows.transpose
   end
 
   private
 
   def to_i_cell
     -> row { row.split.map(&:to_i) }
-  end
-
-  def first_row
-    rows.fetch(0, [])
-  end
-
-  def tail_rows
-    rows.drop(1)
   end
 end
