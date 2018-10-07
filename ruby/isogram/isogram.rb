@@ -11,13 +11,10 @@ class Isogram
   end
 
   def isogram?
-    letters.uniq.length == letters.length
+    letters.uniq == letters
   end
 
   def letters
-    word.
-      downcase.
-      tr("^a-z", "").
-      chars
+    word.downcase.scan(/[a-z]/)
   end
 end
