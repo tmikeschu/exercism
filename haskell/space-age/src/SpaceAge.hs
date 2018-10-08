@@ -9,8 +9,8 @@ data Planet = Mercury
             | Uranus
             | Neptune
 
-ageOn :: Planet -> Float -> Float
-ageOn planet seconds = convert $ case planet of
+orbitalPeriod :: Planet -> Float
+orbitalPeriod p = case p of
     Mercury -> 0.2408467
     Venus -> 0.61519726
     Earth -> 1
@@ -19,5 +19,8 @@ ageOn planet seconds = convert $ case planet of
     Saturn -> 29.447498
     Uranus -> 84.016846
     Neptune -> 164.79132
+
+ageOn :: Planet -> Float -> Float
+ageOn planet seconds = convert (orbitalPeriod planet)
   where
     convert = (/) seconds . (*) 31557600
