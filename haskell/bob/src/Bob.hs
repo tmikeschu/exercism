@@ -12,14 +12,17 @@ hasLetters :: String -> Bool
 hasLetters s = s =~ "[a-zA-Z]"
 
 isQuestion :: String -> Bool
-isQuestion "" = False
-isQuestion s = last s == '?'
+isQuestion s =
+    case reverse s of
+      '?':_ -> True
+      _ -> False
 
 isShout :: String -> Bool
-isShout s = s == map toUpper s && hasLetters s
+isShout s = hasLetters s && s == map toUpper s 
 
 isSilence :: String -> Bool
-isSilence = null
+isSilence "" = True
+isSilence _ = False
 
 classify :: String -> Utterance
 classify s 
