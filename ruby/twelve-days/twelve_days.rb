@@ -23,8 +23,7 @@ class TwelveDays
   def song
     VERSES_DATA.
       map.with_index(&to_verse_s).
-      map { |verse| verse + "\n\n" }.
-      join("").
+      reduce("") { |acc, el| acc + el + "\n\n" }.
       strip + "\n"
   end
 
@@ -34,7 +33,7 @@ class TwelveDays
         data.fetch(:day),
         " day of Christmas my true love gave to me: ",
         gift_chain("", index)
-      ].join("")
+      ].reduce("", :+)
     end
   end
 
@@ -43,15 +42,11 @@ class TwelveDays
     VERSES_DATA.
       take(day + 1).
       reverse.
-      map(&to_gift_s).
-      join("")
+      reduce("") { |acc, el| acc + to_gift_s(el) }
   end
 
-  def to_gift_s
-    @gift_props ||=  
-    -> dayta do 
-      [[:gift], [:suffix, ", "]].
-        reduce("") { |acc, prop| acc + dayta.fetch(*prop) }
-    end
+  def to_gift_s(dayta)
+    [[:gift], [:suffix, ", "]].
+      reduce("") { |acc, prop| acc + dayta.fetch(*prop) }
   end
 end
