@@ -1,6 +1,9 @@
 module Bob (responseFor) where
-import Data.Char (isSpace, toUpper)
+import Data.Char (isSpace, isUpper)
 import Text.Regex.Posix
+import Control.Applicative (liftA2)
+import Data.List (find)
+import Data.Maybe (maybe, fromJust)
 
 data Utterance = QuestionShout
                | Question
@@ -8,39 +11,47 @@ data Utterance = QuestionShout
                | Silence
                | None
 
-hasLetters :: String -> Bool
-hasLetters s = s =~ "[a-zA-Z]"
+type StringTest = String -> Bool
 
-isQuestion :: String -> Bool
+hasLetters :: StringTest
+hasLetters = flip (=~) "[a-zA-Z]"
+
+isQuestion :: StringTest
 isQuestion s =
     case reverse s of
-      '?':_ -> True
-      _ -> False
+        '?':_ -> True
+        _ -> False
 
-isShout :: String -> Bool
-isShout s = hasLetters s && s == map toUpper s 
+isShout :: StringTest
+isShout = liftA2 (&&) hasLetters (all isUpper)
 
-isSilence :: String -> Bool
-isSilence "" = True
-isSilence _ = False
+isQuestionShout :: StringTest
+isQuestionShout = liftA2 (&&) isQuestion isShout
+
+trim :: String -> String
+trim s = iterate (reverse . dropWhile isSpace) s !! 2
 
 classify :: String -> Utterance
-classify s 
-    | isQuestion s' && isShout s' = QuestionShout
-    | isQuestion s' = Question
-    | isShout s = Shout
-    | isSilence s' = Silence
-    | otherwise = None
+classify s =
+    maybe None getUtterance .
+    find (applyToStr . getPredicate) $
+    classifiers
   where 
-    trim = reverse . dropWhile isSpace . reverse . dropWhile isSpace
-    s' = trim s
+    getPredicate = uncurry const
+    getUtterance = uncurry . flip $ const
+    applyToStr = flip ($) . trim $ s
+    classifiers = [ (isQuestionShout, QuestionShout)
+                  , (isQuestion, Question)
+                  , (isShout, Shout)
+                  , (null, Silence)
+                  ]
 
 
 responseFor :: String -> String
-responseFor [] = "Fine. Be that way!"
-responseFor xs = case classify xs of
-    QuestionShout -> "Calm down, I know what I'm doing!"
-    Question -> "Sure."
-    Shout -> "Whoa, chill out!"
-    Silence -> "Fine. Be that way!"
-    None -> "Whatever."
+responseFor xs =
+    case classify xs of
+        QuestionShout -> "Calm down, I know what I'm doing!"
+        Question -> "Sure."
+        Shout -> "Whoa, chill out!"
+        Silence -> "Fine. Be that way!"
+        None -> "Whatever."
