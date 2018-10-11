@@ -1,5 +1,5 @@
 module Bob (responseFor) where
-import Data.Char (isSpace, isUpper)
+import Data.Char (isSpace, toUpper)
 import Text.Regex.Posix
 import Control.Applicative (liftA2)
 import Data.List (find)
@@ -22,8 +22,11 @@ isQuestion s =
         '?':_ -> True
         _ -> False
 
+isUpper :: StringTest
+isUpper s = s == map toUpper s
+
 isShout :: StringTest
-isShout = liftA2 (&&) hasLetters (all isUpper)
+isShout = liftA2 (&&) hasLetters isUpper
 
 isQuestionShout :: StringTest
 isQuestionShout = liftA2 (&&) isQuestion isShout
