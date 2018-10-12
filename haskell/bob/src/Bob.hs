@@ -13,17 +13,17 @@ data Utterance = QuestionShout
 
 type StringTest = String -> Bool
 
-hasLetters :: StringTest
-hasLetters = flip (=~) "[a-zA-Z]"
-
 isQuestion :: StringTest
 isQuestion s =
     case reverse s of
         '?':_ -> True
         _ -> False
 
+hasLetters :: StringTest
+hasLetters = flip (=~) "[a-zA-Z]"
+
 isUpper :: StringTest
-isUpper s = s == map toUpper s
+isUpper = liftA2 (==) id (map toUpper)
 
 isShout :: StringTest
 isShout = liftA2 (&&) hasLetters isUpper
