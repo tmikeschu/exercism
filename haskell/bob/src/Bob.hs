@@ -36,12 +36,10 @@ trim s = iterate (reverse . dropWhile isSpace) s !! 2
 
 classify :: String -> Utterance
 classify s =
-    maybe None getUtterance .
-    find (applyToStr . getPredicate) $
+    maybe None snd .
+    find (applyToStr . fst) $
     classifiers
   where 
-    getPredicate = uncurry const
-    getUtterance = uncurry . flip $ const
     applyToStr = flip ($) . trim $ s
     classifiers = [ (isQuestionShout, QuestionShout)
                   , (isQuestion, Question)
