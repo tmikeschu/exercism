@@ -1,9 +1,7 @@
 module Bob (responseFor) where
-import Data.Char (isSpace, toUpper)
-import Text.Regex.Posix
+import Data.Char (isSpace, isUpper, isAlpha)
 import Control.Applicative (liftA2)
-import Data.List (find)
-import Data.Maybe (maybe, fromJust)
+import Data.List (find, isSuffixOf)
 
 data Utterance = QuestionShout
                | Question
@@ -14,39 +12,32 @@ data Utterance = QuestionShout
 type StringTest = String -> Bool
 
 isQuestion :: StringTest
-isQuestion s =
-    case reverse s of
-        '?':_ -> True
-        _ -> False
-
-hasLetters :: StringTest
-hasLetters = flip (=~) "[a-zA-Z]"
-
-isUpper :: StringTest
-isUpper = liftA2 (==) id (map toUpper)
+isQuestion "" = False
+isQuestion s = "?" `isSuffixOf` s
 
 isShout :: StringTest
-isShout = liftA2 (&&) hasLetters isUpper
+isShout =
+    liftA2 (&&) (any isAlpha) (all isUpper . filter isAlpha)
 
 isQuestionShout :: StringTest
 isQuestionShout = liftA2 (&&) isQuestion isShout
 
 trim :: String -> String
-trim s = iterate (reverse . dropWhile isSpace) s !! 2
+trim =
+    let doTwice f = (!! 2) . iterate f
+    in doTwice (reverse . dropWhile isSpace)
 
 classify :: String -> Utterance
 classify s =
-    maybe None snd .
-    find (applyToStr . fst) $
-    classifiers
+    getUtterance $ find match classifiers
   where 
-    applyToStr = flip ($) . trim $ s
+    getUtterance = maybe None snd
+    match = ($ (trim s)) . fst
     classifiers = [ (isQuestionShout, QuestionShout)
                   , (isQuestion, Question)
                   , (isShout, Shout)
                   , (null, Silence)
                   ]
-
 
 responseFor :: String -> String
 responseFor xs =
