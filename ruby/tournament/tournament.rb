@@ -20,14 +20,36 @@ class Tournament
     input.
       split(NEWLINE).
       map { |line| line.split(";") }.
-      flat_map { |(*teams, outcome)| teams.zip(OUTCOMES.fetch(outcome.to_sym)) }.
-      reduce({}) { |acc, (team, outcome)| acc.update(team => [outcome]) { |_, old, new| old + new } }.
-      map { |team, record| COLUMNS.map { |(_, calculator)| calculator.call(team, record) } }.
+      flat_map(&with_outcome).
+      reduce({}, &record_reducer).
+      map(&calculate_columns).
       sort_by { |(name, _, _,  _, _, points)| [-points, name] }.
       dup.unshift(COLUMNS.map(&:first)).
-      map { |row| row.zip(PADDINGS).
-                      map { |(value, padder)| padder.call(value.to_s) }.
-                      join("|") }.
+      map(&padded) .
       reduce("") { |acc, row| acc + row + NEWLINE }
+  end
+
+  def self.with_outcome
+    -> ((*teams, outcome)) {teams.zip(OUTCOMES.fetch(outcome.to_sym)) }
+  end
+
+  def self.record_reducer
+    -> acc, (team, outcome) do 
+      acc.update(team => [outcome]) { |_, old, new| old + new } 
+    end
+  end
+
+  def self.calculate_columns
+    -> team, record do
+      COLUMNS.map { |(_, calculator)| calculator.call(team, record) }
+    end
+  end
+
+  def self.padded
+    -> row do 
+      row.zip(PADDINGS).
+        map { |(value, padder)| padder.call(value.to_s) }.
+        join("|")
+    end
   end
 end
