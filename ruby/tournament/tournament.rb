@@ -30,7 +30,7 @@ class Tournament
   end
 
   def self.with_outcome
-    -> ((*teams, outcome)) {teams.zip(OUTCOMES.fetch(outcome.to_sym)) }
+    -> ((*teams, outcome)) { teams.zip(OUTCOMES.fetch(outcome.to_sym)) }
   end
 
   def self.record_reducer
