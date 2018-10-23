@@ -1,7 +1,12 @@
 module Bob (responseFor) where
 import Data.Char (isSpace, isUpper, isAlpha)
 import Control.Applicative (liftA2)
-import Data.List (find, isSuffixOf)
+import Data.List (isSuffixOf)
+
+type Predicate a = a -> Bool
+
+(<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
+(<&&>) = liftA2 (&&)
 
 data Utterance = QuestionShout
                | Question
@@ -9,41 +14,32 @@ data Utterance = QuestionShout
                | Silence
                | None
 
-type StringTest = String -> Bool
+isQuestion :: Predicate String
+isQuestion = isSuffixOf "?"
 
-isQuestion :: StringTest
-isQuestion "" = False
-isQuestion s = "?" `isSuffixOf` s
-
-isShout :: StringTest
+isShout :: Predicate String
 isShout =
-    liftA2 (&&) (any isAlpha) (all isUpper . filter isAlpha)
+    (any isAlpha) <&&> (all isUpper . filter isAlpha)
 
-isQuestionShout :: StringTest
-isQuestionShout = liftA2 (&&) isQuestion isShout
-
-trim :: String -> String
-trim =
-    let doTwice f = (!! 2) . iterate f
-    in doTwice (reverse . dropWhile isSpace)
+isQuestionShout :: Predicate String
+isQuestionShout = isQuestion <&&> isShout
 
 classify :: String -> Utterance
-classify s =
-    getUtterance $ find match classifiers
+classify s
+    | isQuestionShout s' = QuestionShout
+    | isQuestion s' = Question
+    | isShout s' = Shout
+    | null s' = Silence
+    | otherwise = None
   where 
-    getUtterance = maybe None snd
-    match = ($ (trim s)) . fst
-    classifiers = [ (isQuestionShout, QuestionShout)
-                  , (isQuestion, Question)
-                  , (isShout, Shout)
-                  , (null, Silence)
-                  ]
+    s' = filter (not . isSpace) s
 
 responseFor :: String -> String
-responseFor xs =
-    case classify xs of
-        QuestionShout -> "Calm down, I know what I'm doing!"
-        Question -> "Sure."
-        Shout -> "Whoa, chill out!"
-        Silence -> "Fine. Be that way!"
-        None -> "Whatever."
+responseFor =
+    response . classify
+  where
+    response QuestionShout = "Calm down, I know what I'm doing!"
+    response Question = "Sure."
+    response Shout = "Whoa, chill out!"
+    response Silence = "Fine. Be that way!"
+    response None = "Whatever."
