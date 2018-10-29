@@ -1,76 +1,95 @@
 module Bob exposing (hey)
 
-import Regex exposing (contains, regex)
-import String exposing (endsWith, isEmpty, toUpper, trim)
+import Char as C
+import List as L
+import Maybe as M
+import String as S
 
 
-hey : String -> String
-hey remark =
-    case classifyRemark remark of
-        Just ShoutingQuesiton ->
-            "Calm down, I know what I'm doing!"
-
-        Just Shout ->
-            "Whoa, chill out!"
-
-        Just Question ->
-            "Sure."
-
-        Just Silent ->
-            "Fine. Be that way!"
-
-        Nothing ->
-            "Whatever."
+type alias Predicate a =
+    a -> Bool
 
 
-type Remark
+type Utterance
     = ShoutingQuesiton
     | Shout
     | Question
     | Silent
+    | None
 
 
-classifications : List ( Remark, StringPred )
+hey : String -> String
+hey =
+    respond << classifyUtterance
+
+
+respond : Utterance -> String
+respond utterance =
+    case utterance of
+        ShoutingQuesiton ->
+            "Calm down, I know what I'm doing!"
+
+        Shout ->
+            "Whoa, chill out!"
+
+        Question ->
+            "Sure."
+
+        Silent ->
+            "Fine. Be that way!"
+
+        None ->
+            "Whatever."
+
+
+classifyUtterance : String -> Utterance
+classifyUtterance s =
+    let
+        testPasses =
+            Tuple.first >> (|>) s
+    in
+    classifications
+        |> L.filter testPasses
+        |> L.map Tuple.second
+        |> L.head
+        |> M.withDefault None
+
+
+classifications : List ( Predicate String, Utterance )
 classifications =
-    [ ( ShoutingQuesiton, isShoutingQuestion )
-    , ( Shout, isShouting )
-    , ( Question, isQuestion )
-    , ( Silent, isSilent )
+    let
+        isSilent =
+            S.trim >> S.isEmpty
+    in
+    [ ( isShoutingQuestion, ShoutingQuesiton )
+    , ( isShouting, Shout )
+    , ( isQuestion, Question )
+    , ( isSilent, Silent )
     ]
 
 
-classifyRemark : String -> Maybe Remark
-classifyRemark s =
-    classifications
-        |> List.filter (Tuple.second >> (|>) s)
-        |> List.head
-        |> Maybe.map Tuple.first
+isShoutingQuestion : Predicate String
+isShoutingQuestion =
+    applyTests L.all [ isShouting, isQuestion ]
 
 
-type alias StringPred =
-    String -> Bool
+isShouting : Predicate String
+isShouting =
+    let
+        hasLetters =
+            String.any C.isAlpha
+
+        isUpper =
+            String.all C.isUpper << String.filter C.isAlpha
+    in
+    applyTests L.all [ hasLetters, isUpper ]
 
 
-hasLetters : StringPred
-hasLetters =
-    contains (regex "[a-zA-Z]")
-
-
-isShouting : StringPred
-isShouting s =
-    hasLetters s && (toUpper s == s)
-
-
-isQuestion : StringPred
+isQuestion : Predicate String
 isQuestion =
-    endsWith "?"
+    S.endsWith "?"
 
 
-isShoutingQuestion : StringPred
-isShoutingQuestion s =
-    isShouting s && isQuestion s
-
-
-isSilent : StringPred
-isSilent =
-    trim >> isEmpty
+applyTests : (((a -> b) -> b) -> a1 -> c) -> a1 -> a -> c
+applyTests requirement tests subject =
+    requirement ((|>) subject) tests
