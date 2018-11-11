@@ -17,6 +17,7 @@
   [cipher-text]
   (->> cipher-text
        (re-seq #"\d*(?i)[a-z ]")
-       (mapcat (comp (partial apply repeat)
-                     (juxt get-quantity get-letter)))
+       (mapcat #(->> %1
+                     ((juxt get-quantity get-letter))
+                     (apply repeat)))
        (apply str)))
