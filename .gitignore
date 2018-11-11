@@ -3,4 +3,5 @@
 **/scala/**/target
 **/clojure/**/target
 .lein-repl-history
+.lein-failures
 **/ocaml/**/_build
