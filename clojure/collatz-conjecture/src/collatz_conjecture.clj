@@ -1,15 +1,15 @@
 (ns collatz-conjecture)
 
-(def half #(/ % 2))
-(def triple #(* 3 %))
+(defn ** [x n] (reduce * (repeat n x)))
 
-(defn- even-odd-transform
-  [x]
-  ((if (even? x) half (comp inc triple)) x))
+(defn- transform [x]
+  (let [rem-two (rem x 2)]
+    (-> x
+        (/ (- 2 rem-two))
+        (* (** 3 rem-two))
+        (+ rem-two))))
 
-(defn collatz
-  ([num] (if (>= 1) (collatz num 0) (throw (Exception. "sorry"))))
-  ([num steps]
-   (if (= 1 num)
-     steps
-     (collatz (even-odd-transform num) (inc steps)))))
+(defn collatz [num]
+  (if (<= num 0)
+    (throw (Exception. "sorry"))
+    (count (take-while #(> % 1) (iterate transform num)))))
