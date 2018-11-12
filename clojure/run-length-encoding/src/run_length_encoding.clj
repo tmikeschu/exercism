@@ -1,4 +1,5 @@
 (ns run-length-encoding)
+(require '[clojure.string :as string])
 
 (defn- get-quantity [s] (Integer. (or (re-find #"\d+" s) 1)))
 (defn- get-letter [s] (re-find #"(?i)[a-z ]" s))
@@ -15,9 +16,10 @@
 (defn run-length-decode
   "decodes a run-length-encoded string"
   [cipher-text]
-  (->> cipher-text
-       (re-seq #"\d*(?i)[a-z ]")
-       (mapcat #(->> %1
-                     ((juxt get-quantity get-letter))
-                     (apply repeat)))
-       (apply str)))
+  (string/replace
+    cipher-text
+    #"(\d+)(\D)"
+    (fn [[_, a, b]]
+      (->> b
+           (repeat (Integer. a))
+           (apply str)))))
