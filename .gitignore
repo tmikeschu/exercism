@@ -1,5 +1,6 @@
 **/elm/**/elm-stuff
 **/javascript/**/node_modules
+**/javascript/**/package-lock.json
 **/scala/**/target
 **/clojure/**/target
 .lein-repl-history
