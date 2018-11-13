@@ -1,17 +1,19 @@
 (ns isbn-verifier)
-(require '[clojure.string :as s])
+
+(def isbn-slots
+  "This matcher captures each digit in the isbn format"
+  #"^(\d)-?(\d)(\d)(\d)-?(\d)(\d)(\d)(\d)(\d)-?([\dX])$")
 
 (defn isbn? [isbn]
+  "Determines if isbn string is valid."
   (let [factors (reverse (range 1 11))]
     (true?
-      (when
-        (re-matches #"^\d-?\d{3}-?\d{5}-?[\dX]$" isbn)
-        (-> isbn
-            (s/replace #"-" "")
-            (->> (re-seq #"\d|X$")
-                 (replace {"X" 10})
-                 (map #(Integer. %))
-                 (map * factors)
-                 (reduce +))
-            (rem 11)
-            zero?)))))
+      (some->> isbn
+               (re-find isbn-slots)
+               rest
+               (replace {"X" 10})
+               (map #(Integer. %))
+               (map * factors)
+               (reduce +)
+               (#(rem % 11))
+               zero?))))
