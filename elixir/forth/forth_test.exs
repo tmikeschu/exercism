@@ -49,14 +49,12 @@ defmodule ForthTest do
     assert s == "2"
   end
 
-  @tag :pending
   test "division by zero" do
     assert_raise Forth.DivisionByZero, fn ->
       Forth.new() |> Forth.eval("4 2 2 - /")
     end
   end
 
-  @tag :pending
   test "dup" do
     s =
       Forth.new()
@@ -77,7 +75,6 @@ defmodule ForthTest do
     end
   end
 
-  @tag :pending
   test "drop" do
     s =
       Forth.new()
@@ -98,7 +95,6 @@ defmodule ForthTest do
     end
   end
 
-  @tag :pending
   test "swap" do
     s =
       Forth.new()
@@ -123,7 +119,6 @@ defmodule ForthTest do
     end
   end
 
-  @tag :pending
   test "over" do
     s =
       Forth.new()
@@ -148,7 +143,6 @@ defmodule ForthTest do
     end
   end
 
-  @tag :pending
   test "defining a new word" do
     s =
       Forth.new()
@@ -159,7 +153,6 @@ defmodule ForthTest do
     assert s == "1 1 1"
   end
 
-  @tag :pending
   test "redefining an existing word" do
     s =
       Forth.new()
@@ -171,7 +164,6 @@ defmodule ForthTest do
     assert s == "1 1 1"
   end
 
-  @tag :pending
   test "redefining an existing built-in word" do
     s =
       Forth.new()
@@ -182,7 +174,6 @@ defmodule ForthTest do
     assert s == "1 1"
   end
 
-  @tag :pending
   test "defining words with odd characters" do
     s =
       Forth.new()
@@ -192,14 +183,12 @@ defmodule ForthTest do
     assert s == "220371"
   end
 
-  @tag :pending
   test "defining a number" do
     assert_raise Forth.InvalidWord, fn ->
       Forth.new() |> Forth.eval(": 1 2 ;")
     end
   end
 
-  @tag :pending
   test "calling a non-existing word" do
     assert_raise Forth.UnknownWord, fn ->
       Forth.new() |> Forth.eval("1 foo")
