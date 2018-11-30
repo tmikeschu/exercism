@@ -90,10 +90,7 @@ defmodule Forth do
 
     def reduce(x, [h, n | tail]) when x in ~w(+ - * /) do
       [
-        apply(Kernel, String.to_atom(x), [n, h])
-        |> Kernel./(1)
-        |> Float.floor()
-        |> round
+        apply(Kernel, String.to_existing_atom(x), [n, h]) |> trunc
         | tail
       ]
     end
@@ -103,7 +100,7 @@ defmodule Forth do
         do: raise(Forth.StackUnderflow)
 
     def reduce(x, stack) when x in ~w(dup drop swap over),
-      do: apply(Forth.StackOps, String.to_atom(x), [stack])
+      do: apply(Forth.StackOps, String.to_existing_atom(x), [stack])
 
     def reduce(_, _), do: raise(Forth.UnknownWord)
   end
