@@ -11,33 +11,27 @@ type Triangle
 
 triangleKind : number -> number -> number -> Result String Triangle
 triangleKind x y z =
+    if x <= 0 || y <= 0 || z <= 0 then
+        Err "Invalid lengths"
+
+    else if x + y < z || x + z < y || z + y < x then
+        Err "Violates inequality"
+
+    else
+        Ok (classifyValidSides x y z)
+
+
+classifyValidSides : number -> number -> number -> Triangle
+classifyValidSides x y z =
     let
-        sides =
-            [ x, y, z ]
+        numberOfDistinctValues =
+            Set.fromList >> Set.toList >> List.length
     in
-    case List.filter ((<) 0) sides of
-        [ _, _, _ ] ->
-            if x + y < z || x + z < y || z + y < x then
-                Err "Violates inequality"
-
-            else
-                Ok (classifyValidSides sides)
-
-        _ ->
-            Err "Invalid lengths"
-
-
-classifyValidSides : List number -> Triangle
-classifyValidSides sides =
-    let
-        uniq =
-            Set.fromList >> Set.toList
-    in
-    case uniq sides of
-        [ _ ] ->
+    case numberOfDistinctValues [ x, y, z ] of
+        1 ->
             Equilateral
 
-        [ _, _ ] ->
+        2 ->
             Isosceles
 
         _ ->
