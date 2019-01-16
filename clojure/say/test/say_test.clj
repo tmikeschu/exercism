@@ -2,15 +2,6 @@
   (:require [clojure.test :refer [deftest is]]
             say))
 
-(deftest digits-zero-test
-  (is (= '(0) (say/to-digits 0))))
-
-(deftest digits-single-test
-  (is (= '(2) (say/to-digits 2))))
-
-(deftest digits-test
-  (is (= '(3 2 1) (say/to-digits 321))))
-
 (deftest zero-test
   (is (= "zero" (say/number 0))))
 
