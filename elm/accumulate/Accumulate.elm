@@ -7,5 +7,15 @@ accumulate func input =
         [] ->
             []
 
-        x :: xs ->
-            func x :: accumulate func xs
+        _ ->
+            accumulateTR func input []
+
+
+accumulateTR : (a -> b) -> List a -> List b -> List b
+accumulateTR f xs ys =
+    case xs of
+        [] ->
+            List.reverse ys
+
+        y :: rest ->
+            accumulateTR f rest (f y :: ys)
