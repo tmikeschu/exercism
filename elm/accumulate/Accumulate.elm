@@ -2,20 +2,15 @@ module Accumulate exposing (accumulate)
 
 
 accumulate : (a -> b) -> List a -> List b
-accumulate func input =
-    case input of
-        [] ->
-            []
-
-        _ ->
-            accumulateTR func input []
+accumulate =
+    accumulateTR []
 
 
-accumulateTR : (a -> b) -> List a -> List b -> List b
-accumulateTR f xs ys =
+accumulateTR : List b -> (a -> b) -> List a -> List b
+accumulateTR ys f xs =
     case xs of
         [] ->
             List.reverse ys
 
         y :: rest ->
-            accumulateTR f rest (f y :: ys)
+            accumulateTR (f y :: ys) f rest
