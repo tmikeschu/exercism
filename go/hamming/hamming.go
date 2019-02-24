@@ -3,7 +3,6 @@ package hamming
 
 import (
 	e "errors"
-	s "strings"
 )
 
 // Distance takes two protein strands and determines their "distance" apart.
@@ -12,15 +11,23 @@ func Distance(a, b string) (int, error) {
 		return 0, e.New("invalid strings")
 	}
 
-	aChars := s.Split(a, "")
-	bChars := s.Split(b, "")
-	distance := 0
+	return distance(a, b, 0), nil
+}
 
-	for index, letter := range aChars {
-		if letter != bChars[index] {
-			distance = distance + 1
-		}
+func distance(a, b string, d int) int {
+	if len(a) == 0 {
+		return d
 	}
 
-	return distance, nil
+	a1, aTail := headTail(a)
+	b1, bTail := headTail(b)
+
+	if a1 != b1 {
+		return distance(aTail, bTail, d+1)
+	}
+	return distance(aTail, bTail, d)
+}
+
+func headTail(s string) (byte, string) {
+	return s[0], s[1:]
 }
