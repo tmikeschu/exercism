@@ -1,12 +1,12 @@
 module CollatzConjecture (collatz) where
-import Data.List (findIndex)
+import Data.List (elemIndex)
 
 collatz :: Integer -> Maybe Integer
 collatz x
   | x <= 0 = Nothing
-  | otherwise = fmap toInteger . findIndex (== 1) . (iterate collatz') $ x
+  | otherwise = fmap toInteger . elemIndex 1 . iterate collatz' $ x
 
 collatz' :: Integer -> Integer
 collatz' x
-    | even x = x `div` 2
+    | even x = x `quot` 2
     | otherwise = x * 3 + 1
