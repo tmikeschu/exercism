@@ -3,12 +3,13 @@ module DNA
   ) where
 
 import qualified Data.Either as Either
+import           Data.Map    (Map)
 import qualified Data.Map    as Map
 
-complements :: Map.Map Char Char
+complements :: Map Char Char
 complements = Map.fromList [('C', 'G'), ('G', 'C'), ('T', 'A'), ('A', 'U')]
 
-eitherLookup :: Ord k => k -> Map.Map k a -> Either k a
+eitherLookup :: Ord k => k -> Map k a -> Either k a
 eitherLookup k m =
   case Map.lookup k m of
     Nothing -> Left k
