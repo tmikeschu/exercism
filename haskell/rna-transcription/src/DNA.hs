@@ -2,9 +2,8 @@ module DNA
   ( toRNA
   ) where
 
-import qualified Data.Either as Either
-import           Data.Map    (Map)
-import qualified Data.Map    as Map
+import           Data.Map (Map)
+import qualified Data.Map as Map
 
 complements :: Map Char Char
 complements = Map.fromList [('C', 'G'), ('G', 'C'), ('T', 'A'), ('A', 'U')]
@@ -16,8 +15,4 @@ eitherLookup k m =
     Just v  -> Right v
 
 toRNA :: String -> Either Char String
-toRNA xs =
-  let partition' = Either.partitionEithers . map (`eitherLookup` complements)
-   in case partition' xs of
-        ([], r)  -> Right r
-        (l:_, _) -> Left l
+toRNA = mapM (`eitherLookup` complements)
