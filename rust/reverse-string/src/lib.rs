@@ -3,7 +3,7 @@ extern crate unicode_segmentation;
 use unicode_segmentation::UnicodeSegmentation;
 
 pub fn reverse(input: &str) -> String {
-    return UnicodeSegmentation::graphemes(input, true)
+    return input.graphemes(true)
         .rev()
         .collect::<String>();
 }
