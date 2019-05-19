@@ -1,5 +1,5 @@
 pub fn reply(message: &str) -> &str {
-    classify(message).map_or("Whatever.", |classification| classification.respond())
+    classify(message).map_or("Whatever.", Classification::respond)
 }
 
 #[derive(Copy, Clone)]
@@ -43,7 +43,7 @@ impl Classification {
 }
 
 fn is_shout(s: &str) -> bool {
-    s.to_uppercase() == s && s.chars().any(|ch| ch.is_ascii_alphabetic())
+    !s.chars().any(char::is_lowercase) && s.chars().any(char::is_alphabetic)
 }
 
 fn is_question(s: &str) -> bool {
