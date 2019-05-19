@@ -1,37 +1,49 @@
-use regex::Regex;
-
-const SHOUT: &str = "SHOUT";
-const SHOUT_RESPONSE: &str = "Whoa, chill out!";
-
-const QUESTION: &str = "QUESTION";
-const QUESTION_RESPONSE: &str = "Sure.";
-
-const SHOUTING_QUESTION: &str = "SHOUTQUESTION";
-const SHOUTING_QUESTION_RESPONSE: &str = "Calm down, I know what I'm doing!";
-
-const SILENT: &str = "SILENT";
-const SILENT_RESPONSE: &str = "Fine. Be that way!";
-
-const DEFAULT_RESPONSE: &str = "Whatever.";
-
 pub fn reply(message: &str) -> &str {
-    let classification_classifiers: Vec<(&str, Box<Fn(&str) -> bool>)> = vec![
-        (SHOUTING_QUESTION, Box::new(is_shouting_question)),
-        (SHOUT, Box::new(is_shout)),
-        (QUESTION, Box::new(is_question)),
-        (SILENT, Box::new(is_silent)),
-    ];
+    classify(message).map_or("Whatever.", |classification| classification.respond())
+}
 
-    get_response(
-        classification_classifiers
-            .iter()
-            .find(|(_, classifier)| classifier(message))
-            .map_or("", |(classification, _)| classification),
-    )
+#[derive(Copy, Clone)]
+enum Classification {
+    Question,
+    Shout,
+    ShoutingQuestion,
+    Silent,
+}
+
+fn classify(message: &str) -> Option<Classification> {
+    use Classification::*;
+    let classifications: [Classification; 4] = [ShoutingQuestion, Shout, Question, Silent];
+
+    classifications.iter().find(|c| c.test(message)).map(|c| *c)
+}
+
+impl Classification {
+    fn test(self, message: &str) -> bool {
+        use Classification::*;
+
+        let predicate: &dyn Fn(&str) -> bool = match self {
+            Question => &is_question,
+            Shout => &is_shout,
+            ShoutingQuestion => &is_shouting_question,
+            Silent => &is_silent,
+        };
+
+        predicate(message)
+    }
+
+    fn respond<'a>(self) -> &'a str {
+        use Classification::*;
+        match self {
+            Question => "Sure.",
+            Shout => "Whoa, chill out!",
+            ShoutingQuestion => "Calm down, I know what I'm doing!",
+            Silent => "Fine. Be that way!",
+        }
+    }
 }
 
 fn is_shout(s: &str) -> bool {
-    Regex::new(r"[A-Z]").unwrap().is_match(s) && s.to_uppercase() == s
+    s.to_uppercase() == s && s.chars().any(|ch| ch.is_ascii_alphabetic())
 }
 
 fn is_question(s: &str) -> bool {
@@ -44,14 +56,4 @@ fn is_silent(s: &str) -> bool {
 
 fn is_shouting_question(s: &str) -> bool {
     is_shout(s) && is_question(s)
-}
-
-fn get_response(s: &str) -> &str {
-    return match s {
-        SHOUTING_QUESTION => SHOUTING_QUESTION_RESPONSE,
-        SHOUT => SHOUT_RESPONSE,
-        QUESTION => QUESTION_RESPONSE,
-        SILENT => SILENT_RESPONSE,
-        _ => DEFAULT_RESPONSE,
-    };
 }
