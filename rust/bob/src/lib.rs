@@ -12,7 +12,7 @@ enum Classification {
 
 fn classify(message: &str) -> Option<Classification> {
     use Classification::*;
-    let classifications: [Classification; 4] = [ShoutingQuestion, Shout, Question, Silent];
+    let classifications: &[Classification] = &[ShoutingQuestion, Shout, Question, Silent];
 
     classifications.iter().find(|c| c.test(message)).map(|c| *c)
 }
