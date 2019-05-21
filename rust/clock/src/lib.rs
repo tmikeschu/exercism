@@ -35,9 +35,10 @@ impl Clock {
 
         if minutes < 0 {
             let offset_minutes = 60 + remaining_minutes;
+            let offset_remaining_minutes = offset_minutes % 60;
             let offset_hours = offset_minutes / 60;
 
-            (offset_minutes % 60, hours + offset_hours - 1)
+            (offset_remaining_minutes, hours + offset_hours - 1)
         } else {
             (remaining_minutes, hours)
         }
