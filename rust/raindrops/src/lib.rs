@@ -1,6 +1,10 @@
 use std::fmt;
 
 pub fn raindrops(n: u32) -> String {
+    transform(n).unwrap_or(n.to_string())
+}
+
+fn transform(n: u32) -> Option<String> {
     use RainSound::*;
     let sounds: &[RainSound] = &[Pling, Plang, Plong];
 
@@ -11,8 +15,8 @@ pub fn raindrops(n: u32) -> String {
         .join("")
         .as_ref()
     {
-        "" => n.to_string(),
-        x => x.to_string(),
+        "" => None,
+        sound => Some(sound.to_string()),
     }
 }
 
