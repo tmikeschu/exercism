@@ -1,10 +1,19 @@
 pub fn verse(n: i32) -> String {
   format!(
-    "{} of beer on the wall, {} of beer.\n{}",
+    "{} of beer on the wall, {} of beer.\n{}, {} of beer on the wall.\n",
     capitalize(bottles_of_beer(n)),
     bottles_of_beer(n),
-    take_down(n)
+    take_down(n),
+    bottles_of_beer(next_number(n))
   )
+}
+
+pub fn sing(start: i32, end: i32) -> String {
+  (end..start + 1)
+    .rev()
+    .map(verse)
+    .collect::<Vec<_>>()
+    .join("\n")
 }
 
 fn bottles_of_beer(n: i32) -> String {
@@ -21,28 +30,26 @@ fn capitalize(s: String) -> String {
     .map(|c| {
       format!(
         "{}{}",
-        c.to_string().to_uppercase(),
+        c.to_uppercase(),
         s.chars().skip(1).collect::<String>()
       )
     })
     .unwrap_or(s)
 }
 
-fn take_down(n: i32) -> String {
+fn next_number(n: i32) -> i32 {
   match n {
-    0 => "Go to the store and buy some more, 99 bottles of beer on the wall.\n".to_string(),
-    _ => format!(
-      "Take {} down and pass it around, {} of beer on the wall.\n",
-      if n == 1 { "it" } else { "one" },
-      bottles_of_beer(n - 1)
-    ),
+    0 => 99,
+    _ => n - 1,
   }
 }
 
-pub fn sing(start: i32, end: i32) -> String {
-  (end..start + 1)
-    .rev()
-    .map(|i| verse(i))
-    .collect::<Vec<_>>()
-    .join("\n")
+fn take_down(n: i32) -> String {
+  match n {
+    0 => String::from("Go to the store and buy some more"),
+    _ => format!(
+      "Take {} down and pass it around",
+      if n == 1 { "it" } else { "one" },
+    ),
+  }
 }
