@@ -1,52 +1,37 @@
 use std::fmt;
 
+const MINUTES_PER_HOUR: i32 = 60;
+const HOURS_PER_DAY: i32 = 1440;
+
 #[derive(Debug, PartialEq)]
 pub struct Clock {
-    hours: i32,
     minutes: i32,
 }
 
 impl Clock {
     pub fn new(hours: i32, minutes: i32) -> Self {
-        let (adjusted_minutes, rollover_hours) = Clock::sanitize_minutes(minutes);
-        let adjusted_hours = Clock::sanitize_hours(hours + rollover_hours);
-
         Clock {
-            hours: adjusted_hours,
-            minutes: adjusted_minutes,
+            minutes: Clock::sanitize_minutes(minutes + MINUTES_PER_HOUR * hours),
         }
     }
 
     pub fn add_minutes(&self, minutes: i32) -> Self {
-        Clock::new(self.hours, self.minutes + minutes)
+        Clock::new(0, self.minutes + minutes)
     }
 
-    fn sanitize_hours(hours: i32) -> i32 {
-        if hours < 0 {
-            Clock::sanitize_hours(24 + hours)
-        } else {
-            hours % 24
-        }
-    }
-
-    fn sanitize_minutes(minutes: i32) -> (i32, i32) {
-        let hours = minutes / 60;
-        let remaining_minutes = minutes % 60;
-
+    fn sanitize_minutes(minutes: i32) -> i32 {
         if minutes < 0 {
-            let offset_minutes = 60 + remaining_minutes;
-            let offset_remaining_minutes = offset_minutes % 60;
-            let offset_hours = offset_minutes / 60;
-
-            (offset_remaining_minutes, hours + offset_hours - 1)
+            Clock::sanitize_minutes(HOURS_PER_DAY + minutes)
         } else {
-            (remaining_minutes, hours)
+            minutes % HOURS_PER_DAY
         }
     }
 }
 
 impl fmt::Display for Clock {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:02}:{:02}", self.hours, self.minutes)
+        let hours = self.minutes / MINUTES_PER_HOUR;
+        let minutes = self.minutes % MINUTES_PER_HOUR;
+        write!(f, "{:02}:{:02}", hours, minutes)
     }
 }
