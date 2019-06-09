@@ -1,3 +1,6 @@
+use itertools::Itertools;
+use std::iter::Iterator;
+
 const ASCII_LOWER: [char; 26] = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
     't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -10,15 +13,9 @@ pub fn encode(plain: &str) -> String {
         .chars()
         .filter(char::is_ascii_alphanumeric)
         .map(flip_char)
-        .collect::<Vec<_>>()
-        .as_slice()
         .chunks(5)
-        .map(|el| {
-            el.iter()
-                .map(|c| c.to_string())
-                .collect::<Vec<_>>()
-                .join("")
-        })
+        .into_iter()
+        .map(Iterator::collect::<String>)
         .collect::<Vec<_>>()
         .join(" ")
 }
@@ -28,7 +25,7 @@ pub fn decode(cipher: &str) -> String {
     cipher
         .replace(" ", "")
         .chars()
-        .map(|c| flip_char(c).to_string())
+        .map(flip_char)
         .collect::<String>()
 }
 
@@ -36,6 +33,5 @@ fn flip_char(c: char) -> char {
     ASCII_LOWER
         .iter()
         .position(|&x| x == c)
-        .map(|i| ASCII_LOWER[25 - i])
-        .unwrap_or(c)
+        .map_or(c, |i| ASCII_LOWER[25 - i])
 }
