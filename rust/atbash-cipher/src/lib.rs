@@ -22,11 +22,7 @@ pub fn encode(plain: &str) -> String {
 
 /// "Decipher" with the Atbash cipher.
 pub fn decode(cipher: &str) -> String {
-    cipher
-        .replace(" ", "")
-        .chars()
-        .map(flip_char)
-        .collect::<String>()
+    cipher.replace(" ", "").chars().map(flip_char).collect()
 }
 
 fn flip_char(c: char) -> char {
