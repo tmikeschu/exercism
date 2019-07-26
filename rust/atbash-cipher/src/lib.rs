@@ -1,10 +1,8 @@
 use itertools::Itertools;
 use std::iter::Iterator;
 
-const ASCII_LOWER: [char; 26] = [
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
-    't', 'u', 'v', 'w', 'x', 'y', 'z',
-];
+const A: u8 = b'a';
+const Z: u8 = b'z';
 
 /// "Encipher" with the Atbash cipher.
 pub fn encode(plain: &str) -> String {
@@ -26,8 +24,8 @@ pub fn decode(cipher: &str) -> String {
 }
 
 fn flip_char(c: char) -> char {
-    ASCII_LOWER
-        .iter()
-        .position(|&x| x == c)
-        .map_or(c, |i| ASCII_LOWER[25 - i])
+    (c as u8)
+        .checked_sub(A)
+        .and_then(|x| Z.checked_sub(x))
+        .map_or(c, |x| x as char)
 }
