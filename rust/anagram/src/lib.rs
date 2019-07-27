@@ -6,11 +6,11 @@ pub fn anagrams_for<'a>(word: &str, possible_anagrams: &[&'a str]) -> HashSet<&'
 
     possible_anagrams
         .iter()
-        .filter(|&&possible_anagram| {
+        .cloned()
+        .filter(|possible_anagram| {
             let lowered2 = possible_anagram.to_lowercase();
             sort(&lowered2) == sorted && lowered2 != lowered
         })
-        .cloned()
         .collect()
 }
 
