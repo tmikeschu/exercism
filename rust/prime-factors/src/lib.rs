@@ -6,7 +6,6 @@ pub fn factors(n: u64) -> Vec<u64> {
             let mut sieve = (1..=n).flat_map(|x| (2 * x..n).filter(move |y| y % x == 0));
             let mut fs = Vec::new();
             let mut f = sieve.next().unwrap();
-
             loop {
                 if x == 1 {
                     break;
