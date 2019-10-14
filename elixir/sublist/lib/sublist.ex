@@ -10,27 +10,14 @@ defmodule Sublist do
   and if not whether it is equal or unequal to the second list.
   """
   def compare(a, b) do
-    case {a, b} do
-      {a, b} when a === b -> @equal
-      {[], _} -> @sublist
-      {_, []} -> @superlist
-      {a, b} when length(a) < length(b) -> classify(b, a)
-      {a, b} when length(a) > length(b) -> classify(a, b, @superlist)
-      _ -> @unequal
+    cond do
+      a === b -> @equal
+      length(a) <= length(b) && is_sublist?(b, a) -> @sublist
+      length(a) > length(b) && is_sublist?(a, b) -> @superlist
+      true -> @unequal
     end
   end
 
-  defp classify(a, b, label \\ @sublist) do
-    if is_sublist?(a, b) do
-      label
-    else
-      @unequal
-    end
-  end
-
-  defp is_sublist?(a, b) do
-    a
-    |> Enum.chunk_every(length(b), 1)
-    |> Enum.any?(fn chunk -> chunk === b end)
-  end
+  defp is_sublist?(a, b) when length(a) < length(b), do: false
+  defp is_sublist?(a, b), do: Enum.take(a, length(b)) === b || is_sublist?(tl(a), b)
 end
