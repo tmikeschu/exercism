@@ -21,11 +21,10 @@ export default class QueenAttack {
 
   constructor({ white, black }: { white: Position; black: Position }) {
     validatePositions(white, black);
+
     this.white = white;
     this.black = black;
-    this.board = newBoard();
-
-    this.assignBoard();
+    this.board = this.assignBoard();
   }
 
   public canAttack(): boolean {
@@ -40,14 +39,16 @@ export default class QueenAttack {
     return wx === bx || wy === by || negativeSlope || positiveSlope;
   }
 
-  private assignBoard(): void {
-    const {
-      white: [wx, wy],
-      black: [bx, by]
-    } = this;
-
-    this.board[wx][wy] = "W";
-    this.board[bx][by] = "B";
+  private assignBoard(): Board {
+    return newBoard().map((row, y) =>
+      row.map((cell, x) =>
+        y === this.white[0] && x === this.white[1]
+          ? "W"
+          : y === this.black[0] && x === this.black[1]
+          ? "B"
+          : cell
+      )
+    ) as Board;
   }
 
   public toString(): string {
