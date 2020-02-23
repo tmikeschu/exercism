@@ -1,6 +1,8 @@
-function validTriangle(sides: number[]): boolean {
+function validateTriangle(sides: number[]): void {
   const [a, b, c] = sides;
-  return sides.every(x => x > 0) && a + b > c && a + c > b && b + c > a;
+  if (!(sides.every(x => x > 0) && a + b > c && a + c > b && b + c > a)) {
+    throw new Error("Side cannot be <= 0");
+  }
 }
 
 export default class Triangle {
@@ -11,18 +13,15 @@ export default class Triangle {
   }
 
   kind(): "equilateral" | "isosceles" | "scalene" {
-    if (!validTriangle(this.sides)) {
-      throw new Error("Side cannot be <= 0");
-    }
+    validateTriangle(this.sides);
 
-    if (new Set(this.sides).size === 1) {
-      return "equilateral";
+    switch (new Set(this.sides).size) {
+      case 1:
+        return "equilateral";
+      case 2:
+        return "isosceles";
+      default:
+        return "scalene";
     }
-
-    if (new Set(this.sides).size === 2) {
-      return "isosceles";
-    }
-
-    return "scalene";
   }
 }
