@@ -1,16 +1,4 @@
-type Color =
-  | "black"
-  | "brown"
-  | "red"
-  | "orange"
-  | "yellow"
-  | "green"
-  | "blue"
-  | "violet"
-  | "grey"
-  | "white";
-
-const COLOR_MAP: Record<Color, number> = {
+const COLOR_MAP: Record<string, number> = {
   black: 0,
   brown: 1,
   red: 2,
@@ -20,11 +8,13 @@ const COLOR_MAP: Record<Color, number> = {
   blue: 6,
   violet: 7,
   grey: 8,
-  white: 9
+  white: 9,
 };
 
+type Color = keyof typeof COLOR_MAP;
+
 export class ResistorColor {
-  private colors: Color[];
+  private readonly colors: Color[];
 
   constructor(colors: Color[]) {
     if (colors.length < 2) {
@@ -37,7 +27,7 @@ export class ResistorColor {
     Number(
       this.colors
         .slice(0, 2)
-        .map(color => COLOR_MAP[color])
+        .map((color) => COLOR_MAP[color])
         .join("")
     );
 }
