@@ -13,9 +13,7 @@ object SpaceAge {
   private val earthYearSeconds: Double = 31557600
 
   private val adjust = (ratio: Double) =>
-    (seconds: Double) => {
-      onEarth(seconds / ratio)
-    }
+    (seconds: Double) => onEarth(seconds / ratio)
 
   def onEarth(seconds: Double): Double = seconds / earthYearSeconds
 
