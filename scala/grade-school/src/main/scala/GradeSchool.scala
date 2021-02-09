@@ -4,16 +4,16 @@ class School {
   var _db: DB = Map()
 
   def add(name: String, g: Int) = {
-    val update = _db.get(g).map(s => s :+ name).getOrElse(Seq(name))
-    _db = _db + (g -> update)
+    _db = _db + (g -> (_db.getOrElse(g, Seq()) :+ name))
   }
 
   def db: DB = _db
 
   def grade(g: Int): Seq[String] = _db.get(g).getOrElse(Seq())
 
-  def sorted: DB = _db.toList
-    .map { case (grade, names) => (grade, names.sorted) }
-    .sortBy { case (int, _) => int }
+  def sorted: DB = _db
+    .mapValues(_.sorted)
+    .toList
+    .sortBy(_._1)
     .toMap
 }
