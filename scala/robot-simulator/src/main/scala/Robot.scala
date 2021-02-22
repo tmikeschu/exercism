@@ -4,24 +4,21 @@ object Bearing extends Enumeration {
 
 class Robot(val bearing: Bearing.Value, val coordinates: Tuple2[Int, Int]) {
   import Bearing._
+  import Robot._
+
+  private def nextItem[T](xs: List[T], current: T): T = {
+    val index = xs.indexOf(current)
+    val (before, after) = xs.splitAt(index + 1)
+    List.concat(after, before).head
+  }
 
   def turnRight(): Robot = {
-    val newBearing = bearing match {
-      case North => East
-      case East  => South
-      case South => West
-      case West  => North
-    }
+    val newBearing = nextItem(bearings, bearing)
     Robot(newBearing, coordinates)
   }
 
   def turnLeft(): Robot = {
-    val newBearing = bearing match {
-      case North => West
-      case East  => North
-      case South => East
-      case West  => South
-    }
+    val newBearing = nextItem(bearings.reverse, bearing)
     Robot(newBearing, coordinates)
   }
 
@@ -52,19 +49,18 @@ class Robot(val bearing: Bearing.Value, val coordinates: Tuple2[Int, Int]) {
   def canEqual(a: Any): Boolean = a.isInstanceOf[Robot]
   override def equals(obj: Any): Boolean = {
     obj match {
-      case r: Robot => {
-        this.canEqual(r) &&
-        r.coordinates == coordinates &&
-        r.bearing == bearing
-      }
-      case _ => false
+      case r: Robot => this.canEqual(r) && r.hashCode == this.hashCode
+      case _        => false
     }
   }
   override def hashCode: Int = coordinates.hashCode() + bearing.id
 }
 
 object Robot {
+  import Bearing._
   def apply(bearing: Bearing.Value, coords: Tuple2[Int, Int]): Robot = {
     new Robot(bearing, coords)
   }
+
+  val bearings = List(North, East, South, West)
 }
