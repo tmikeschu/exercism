@@ -1,6 +1,6 @@
 object SecretHandshake {
   type Move = String
-  type Handshake = List[String]
+  type Handshake = List[Move]
 
   private val moves: List[(Int, Move)] = List(
     (1, "wink"),
