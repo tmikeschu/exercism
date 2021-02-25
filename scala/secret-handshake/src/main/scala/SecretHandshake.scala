@@ -12,7 +12,7 @@ object SecretHandshake {
 
   def commands(x: Int): Handshake = commandsRecur(
     Integer.parseInt(x.toBinaryString),
-    List.empty[String],
+    List.empty[Move],
     prepend
   )
 
