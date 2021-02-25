@@ -25,7 +25,7 @@ object SecretHandshake {
       addMove: (Move, Handshake) => Handshake
   ): Handshake = {
     moves
-      .takeWhile { case (k, _) => k <= x }
+      .takeWhile { case (y, _) => y <= x }
       .lastOption
       .map {
         case (y, move) => {
